@@ -192,7 +192,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
     <span class="title">Website Pricing Calculator</span>
     <span class="sub">तुमची requirements निवडा</span>
   </div>
-  <span class="header-tag">2026 Rates</span>
+  <span class="header-tag">2025 Rates</span>
 </div>
 
 <div class="layout">
@@ -290,10 +290,11 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
     <div class="sum-line"><span class="lbl">Base Cost (तुमचा खर्च)</span><span class="val" id="sumBase">₹0</span></div>
     <div class="sum-line" id="urgentLine" style="display:none"><span class="lbl" style="color:var(--red)">Urgent Charge (15%)</span><span class="val" style="color:var(--red)" id="sumUrgent">₹0</span></div>
 
+
     <div class="sum-divider"></div>
 
     <div class="sum-total-box">
-      <div class="sum-total-label"></div>
+      
       <div class="sum-total-amount" id="sumTotal">₹0</div>
       <!-- <div class="sum-total-gst" id="sumGstNote">GST वेगळा असल्यास + 18% (₹0)</div>-->
     </div>
@@ -303,11 +304,11 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
       <div class="s-text">आपण <strong id="savingAmt">₹0</strong> ची बचत केली आहे</div>
     </div>
 
+
     <button class="cta-btn" onclick="generateQuote()">पूर्ण प्लान पहा →</button>
 
     <div class="yearly-box">
-      <strong>वार्षिक Renewal:</strong> Domain ₹800–1,200 + Hosting ₹1,500–3,000<br>
-      ≈ <strong>₹2,500–4,200 / year</strong>
+      <strong>वार्षिक Renewal:</strong> Domain ₹800–1,200 + Hosting ₹1,500–3,000
     </div>
 
   </div>
@@ -515,13 +516,9 @@ function calc(){
 
   document.getElementById('sumBase').textContent=fmt(totalCost);
   document.getElementById('sumUrgent').textContent=fmt(urgentAmt);
-  document.getElementById('sumProfit').textContent=fmt(profit);
-  document.getElementById('sumMarginPct').textContent=margin;
   document.getElementById('sumTotal').textContent=fmt(selling);
   //document.getElementById('sumGstNote').textContent='GST लागल्यास + 18% = '+fmt(selling+gst);
   document.getElementById('savingAmt').textContent=fmt(saving)+' बचत';
-  document.getElementById('profitPctLabel').textContent=margin+'%';
-  document.getElementById('profitFill').style.width=margin+'%';
 }
 
 function toggleFeatDropdown(){
