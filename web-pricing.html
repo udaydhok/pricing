@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Website Pricing Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1a1a2e;
+  --ink2:#4a4a6a;
+  --ink3:#8888aa;
+  --surface:#ffffff;
+  --bg:#f4f3f8;
+  --bg2:#eceaf4;
+  --accent:#5c4de8;
+  --accent-light:#ede9ff;
+  --accent-mid:#7c6ff0;
+  --green:#16a34a;
+  --green-light:#dcfce7;
+  --green-border:#bbf7d0;
+  --gold:#d97706;
+  --gold-light:#fef3c7;
+  --red:#dc2626;
+  --red-light:#fee2e2;
+  --radius:12px;
+  --radius-sm:8px;
+  --shadow:0 2px 12px rgba(30,20,80,0.08);
+  --shadow-lg:0 8px 32px rgba(30,20,80,0.13);
+}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+
+/* HEADER */
+.header{background:var(--ink);padding:20px 32px;display:flex;align-items:center;justify-content:space-between}
+.header-brand{display:flex;flex-direction:column}
+.header-brand .title{font-family:'DM Serif Display',serif;color:#fff;font-size:22px;line-height:1}
+.header-brand .sub{color:var(--ink3);font-size:12px;margin-top:3px;letter-spacing:.5px}
+.header-tag{background:var(--accent);color:#fff;font-size:12px;font-weight:600;padding:6px 14px;border-radius:50px}
+
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:1fr 360px;gap:24px;padding:28px 32px;max-width:1280px;margin:0 auto;align-items:start}
+.left-col{display:flex;flex-direction:column;gap:24px}
+
+/* STEP CARD */
+.step-card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.step-head{padding:18px 24px;border-bottom:1.5px solid var(--bg);display:flex;align-items:center;gap:12px}
+.step-num{width:28px;height:28px;border-radius:50%;background:var(--accent);color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-head h2{font-size:15px;font-weight:600;color:var(--ink)}
+.step-head p{font-size:12px;color:var(--ink3);margin-top:2px}
+.step-body{padding:20px 24px}
+
+/* PACKAGE CARDS */
+.pkg-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.pkg-card{border:2px solid var(--bg2);border-radius:var(--radius);padding:16px 14px;cursor:pointer;transition:all .2s;background:var(--surface);position:relative;user-select:none}
+.pkg-card:hover{border-color:var(--accent-mid);transform:translateY(-2px);box-shadow:var(--shadow)}
+.pkg-card.active{border-color:var(--accent);background:var(--accent-light);box-shadow:0 0 0 3px rgba(92,77,232,0.12)}
+.pkg-card .tick{position:absolute;top:10px;right:10px;width:20px;height:20px;border-radius:50%;border:2px solid var(--bg2);display:flex;align-items:center;justify-content:center;transition:all .2s}
+.pkg-card.active .tick{background:var(--accent);border-color:var(--accent);color:#fff;font-size:10px}
+.pkg-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:50px;margin-bottom:10px;display:inline-block;letter-spacing:.3px}
+.badge-basic{background:#dbeafe;color:#1e40af}
+.badge-standard{background:var(--green-light);color:var(--green)}
+.badge-ecomm{background:var(--accent-light);color:var(--accent)}
+.badge-premium{background:var(--gold-light);color:var(--gold)}
+.pkg-name{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:3px}
+.pkg-card.active .pkg-name{color:var(--accent)}
+.pkg-desc{font-size:11px;color:var(--ink3);line-height:1.4}
+.pkg-price{font-size:13px;font-weight:600;color:var(--ink);margin-top:10px}
+.pkg-card.active .pkg-price{color:var(--accent)}
+
+/* CAT TABS */
+.cat-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.cat-tab{padding:7px 14px;border-radius:50px;border:1.5px solid var(--bg2);background:var(--surface);cursor:pointer;font-size:12px;font-weight:500;color:var(--ink3);transition:all .18s;white-space:nowrap}
+.cat-tab:hover{border-color:var(--accent-mid);color:var(--accent)}
+.cat-tab.active{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 2px 8px rgba(92,77,232,0.25)}
+.cat-actions{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cat-count{font-size:12px;color:var(--ink3)}
+.cat-count strong{color:var(--ink);font-weight:600}
+.sel-all-btn{font-size:12px;font-weight:500;padding:5px 12px;border-radius:var(--radius-sm);border:1.5px solid var(--bg2);background:transparent;cursor:pointer;color:var(--ink2);transition:all .15s}
+.sel-all-btn:hover{background:var(--bg);border-color:var(--ink3)}
+
+/* FEATURE BUTTONS */
+.feat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.feat-btn{display:flex;align-items:center;gap:10px;padding:11px 14px;border-radius:var(--radius-sm);border:1.5px solid var(--bg2);background:var(--surface);cursor:pointer;transition:all .18s;text-align:left;user-select:none}
+.feat-btn:hover:not(.active){border-color:var(--accent-mid);background:#faf9ff}
+.feat-btn.active{border-color:var(--green);background:var(--green-light);box-shadow:0 0 0 2px rgba(22,163,74,0.1)}
+.feat-icon{width:22px;height:22px;border-radius:6px;border:2px solid var(--bg2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;transition:all .18s;color:var(--ink3)}
+.feat-btn.active .feat-icon{background:var(--green);border-color:var(--green);color:#fff}
+.feat-label{flex:1;font-size:13px;font-weight:500;color:var(--ink2);line-height:1.3}
+.feat-btn.active .feat-label{color:#166534}
+.feat-cost{font-size:12px;font-weight:600;color:var(--ink3);white-space:nowrap}
+.feat-btn.active .feat-cost{color:var(--green)}
+.tier-tag{font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px;vertical-align:middle;margin-left:3px}
+.tier-pro{background:var(--accent-light);color:var(--accent)}
+.tier-ent{background:var(--gold-light);color:var(--gold)}
+
+/* MARGIN SLIDER */
+.slider-section{padding:0 2px}
+.slider-row{margin-bottom:18px}
+.slider-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.slider-label{font-size:13px;font-weight:500;color:var(--ink2)}
+.slider-val{font-size:18px;font-weight:700;color:var(--accent)}
+input[type=range]{-webkit-appearance:none;width:100%;height:6px;border-radius:3px;background:var(--bg2);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--accent);cursor:pointer;border:3px solid #fff;box-shadow:0 2px 6px rgba(92,77,232,0.35);transition:transform .15s}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
+.slider-hints{display:flex;justify-content:space-between;font-size:11px;color:var(--ink3);margin-top:5px}
+
+/* SUMMARY PANEL (sticky right) */
+.summary-panel{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow-lg);position:sticky;top:24px;overflow:hidden}
+.sum-head{background:var(--ink);padding:18px 20px}
+.sum-head h3{font-family:'DM Serif Display',serif;color:#fff;font-size:18px;margin-bottom:2px}
+.sum-head p{color:var(--ink3);font-size:12px}
+.sum-body{padding:20px}
+.sum-section-label{font-size:11px;font-weight:700;color:var(--ink3);letter-spacing:.8px;text-transform:uppercase;margin-bottom:10px}
+.sum-pkg-badge{display:flex;align-items:center;gap:10px;padding:12px;border-radius:var(--radius-sm);background:var(--accent-light);border:1.5px solid rgba(92,77,232,0.2);margin-bottom:16px}
+.sum-pkg-icon{width:36px;height:36px;background:var(--accent);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0}
+.sum-pkg-name{font-size:13px;font-weight:700;color:var(--accent)}
+.sum-pkg-count{font-size:12px;color:var(--accent-mid);margin-top:1px}
+.sum-line{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dashed var(--bg2);font-size:13px}
+.sum-line:last-of-type{border:none}
+.sum-line .lbl{color:var(--ink2)}
+.sum-line .val{font-weight:600;color:var(--ink)}
+.sum-divider{height:1.5px;background:var(--bg2);margin:14px 0}
+.sum-total-box{background:var(--ink);border-radius:var(--radius-sm);padding:16px;text-align:center;margin-bottom:14px}
+.sum-total-label{font-size:12px;color:rgba(255,255,255,0.6);margin-bottom:4px}
+.sum-total-amount{font-family:'DM Serif Display',serif;font-size:36px;color:#fff;line-height:1}
+.sum-total-gst{font-size:11px;color:rgba(255,255,255,0.5);margin-top:4px}
+.sum-savings{background:var(--green-light);border:1.5px solid var(--green-border);border-radius:var(--radius-sm);padding:10px 14px;display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.sum-savings .s-icon{font-size:18px;flex-shrink:0}
+.sum-savings .s-text{font-size:13px;color:#166534;line-height:1.4}
+.sum-savings .s-text strong{font-weight:700}
+.profit-wrap{margin-bottom:14px}
+.profit-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px}
+.profit-label span:first-child{color:var(--ink3)}
+.profit-label span:last-child{font-weight:600;color:var(--green)}
+.profit-bar{height:10px;border-radius:5px;background:var(--bg2);overflow:hidden}
+.profit-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,#16a34a,#22c55e);transition:width .4s ease}
+.cta-btn{width:100%;padding:14px;border-radius:var(--radius-sm);border:none;background:var(--accent);color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;letter-spacing:.3px;transition:all .2s}
+.cta-btn:hover{background:var(--accent-mid);transform:translateY(-1px);box-shadow:0 4px 16px rgba(92,77,232,0.35)}
+.cta-btn:active{transform:translateY(0)}
+.yearly-box{background:var(--gold-light);border:1.5px solid #fde68a;border-radius:var(--radius-sm);padding:10px 14px;margin-top:12px;font-size:12px;color:#92400e;line-height:1.6}
+.yearly-box strong{font-weight:700}
+
+/* URGENT BADGE */
+.urgent-warn{display:none;align-items:center;gap:8px;padding:10px 14px;background:var(--red-light);border:1.5px solid #fca5a5;border-radius:var(--radius-sm);font-size:12px;color:var(--red);margin-top:10px}
+.urgent-warn.show{display:flex}
+
+/* FEATURES DROPDOWN */
+.feat-dropdown-wrap{margin-bottom:14px}
+.feat-dropdown-toggle{width:100%;display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:var(--radius-sm);border:1.5px solid var(--green-border);background:var(--green-light);cursor:pointer;font-size:13px;font-weight:600;color:#166534;transition:all .2s}
+.feat-dropdown-toggle:hover{background:#bbf7d0}
+.feat-dropdown-toggle .arrow{font-size:11px;transition:transform .25s;display:inline-block}
+.feat-dropdown-toggle.open .arrow{transform:rotate(180deg)}
+.feat-dropdown-list{display:none;margin-top:6px;border:1.5px solid var(--green-border);border-radius:var(--radius-sm);overflow:hidden;background:var(--surface)}
+.feat-dropdown-list.open{display:block}
+.feat-dropdown-search{width:100%;padding:9px 12px;border:none;border-bottom:1px solid var(--bg2);font-size:12px;font-family:'DM Sans',sans-serif;outline:none;background:var(--bg);color:var(--ink)}
+.feat-dropdown-search::placeholder{color:var(--ink3)}
+.feat-dropdown-inner{max-height:240px;overflow-y:auto}
+.feat-dropdown-inner::-webkit-scrollbar{width:4px}
+.feat-dropdown-inner::-webkit-scrollbar-track{background:transparent}
+.feat-dropdown-inner::-webkit-scrollbar-thumb{background:var(--bg2);border-radius:2px}
+.feat-drop-cat{font-size:10px;font-weight:700;color:var(--ink3);letter-spacing:.6px;padding:8px 12px 4px;background:var(--bg);text-transform:uppercase;border-bottom:1px solid var(--bg2)}
+.feat-drop-item{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;border-bottom:1px solid var(--bg2);font-size:12px;cursor:pointer;transition:background .15s}
+.feat-drop-item:last-child{border:none}
+.feat-drop-item:hover{background:var(--bg)}
+.feat-drop-item .fi-left{display:flex;align-items:center;gap:7px}
+.feat-drop-item .fi-dot{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0}
+.feat-drop-item .fi-name{color:var(--ink2);line-height:1.3}
+.feat-drop-item .fi-price{font-size:11px;font-weight:600;color:var(--green);white-space:nowrap;margin-left:8px}
+.feat-drop-item .fi-remove{width:18px;height:18px;border-radius:50%;border:1.5px solid #fca5a5;background:var(--red-light);color:var(--red);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+.feat-drop-item:hover .fi-remove{background:var(--red);color:#fff;border-color:var(--red)}
+.feat-drop-empty{padding:20px;text-align:center;font-size:13px;color:var(--ink3)}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr;padding:16px}
+  .pkg-grid{grid-template-columns:repeat(2,1fr)}
+  .summary-panel{position:static}
+}
+@media(max-width:560px){
+  .feat-grid{grid-template-columns:1fr}
+  .pkg-grid{grid-template-columns:repeat(2,1fr)}
+  .header{padding:16px 20px}
+  .layout{padding:12px}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-brand">
+    <span class="title">Website Pricing Calculator</span>
+    <span class="sub">Client साठी — तुमची requirements निवडा</span>
+  </div>
+  <span class="header-tag">2025 Rates</span>
+</div>
+
+<div class="layout">
+<div class="left-col">
+
+  <!-- STEP 1: PACKAGE -->
+  <div class="step-card">
+    <div class="step-head">
+      <div class="step-num">1</div>
+      <div>
+        <h2>तुम्हाला कोणता package हवा आहे?</h2>
+        <p>एक option निवडा — नंतर features add / remove करता येतात</p>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="pkg-grid" id="pkgGrid"></div>
+    </div>
+  </div>
+
+  <!-- STEP 2: FEATURES -->
+  <div class="step-card">
+    <div class="step-head">
+      <div class="step-num">2</div>
+      <div>
+        <h2>Features निवडा / काढा</h2>
+        <p>हिरव्या रंगाचे = निवडलेले &nbsp;|&nbsp; पांढरे = निवडलेले नाही</p>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="cat-tabs" id="catTabs"></div>
+      <div class="cat-actions">
+        <span class="cat-count" id="catCountLabel"><strong>0</strong> features निवडले</span>
+        <button class="sel-all-btn" id="selAllBtn" onclick="toggleAllVisible()">सर्व निवडा</button>
+      </div>
+      <div class="feat-grid" id="featGrid"></div>
+    </div>
+  </div>
+
+  <!-- STEP 3: MARGIN -->
+  <div class="step-card">
+    <div class="step-head">
+      <div class="step-num">3</div>
+      <div>
+        <h2>Delivery Time</h2>
+        <p>Slider adjust करा — खाली price आपोआप बदलेल</p>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="slider-section">
+        <div class="slider-row">
+          <div class="slider-top">
+            <span class="slider-label">Delivery किती दिवसांत?</span>
+            <span class="slider-val" id="deliveryVal">3 दिवस</span>
+          </div>
+          <input type="range" id="deliveryRange" min="1" max="15" value="3" step="1" oninput="calc()">
+          <div class="slider-hints"><span>1 दिवस (Urgent)</span><span>7 दिवस</span></div>
+          <div class="urgent-warn" id="urgentWarn">⚡ Urgent delivery — 15% extra charge लागेल</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div><!-- end left-col -->
+
+<!-- SUMMARY PANEL -->
+<div class="summary-panel">
+  <div class="sum-head">
+    <h3>Price Summary</h3>
+    <p>सर्व calculations इथे दिसतील</p>
+  </div>
+  <div class="sum-body">
+
+    <div class="sum-section-label">निवडलेला Package</div>
+    <div class="sum-pkg-badge" id="sumPkgBadge">
+      <div class="sum-pkg-icon" id="sumPkgIcon">—</div>
+      <div>
+        <div class="sum-pkg-name" id="sumPkgName">Package निवडला नाही</div>
+        <div class="sum-pkg-count" id="sumPkgCount">0 features selected</div>
+      </div>
+    </div>
+
+    <div class="feat-dropdown-wrap">
+      <button class="feat-dropdown-toggle" id="featDropToggle" onclick="toggleFeatDropdown()">
+        <span id="featDropLabel">निवडलेले Features पाहा</span>
+        <span class="arrow">&#9660;</span>
+      </button>
+      <div class="feat-dropdown-list" id="featDropList">
+        <input class="feat-dropdown-search" id="featDropSearch" type="text" placeholder="Feature शोधा..." oninput="renderFeatDropdown()">
+        <div class="feat-dropdown-inner" id="featDropInner"></div>
+      </div>
+    </div>
+
+    <div class="sum-section-label">Breakdown</div>
+    <div class="sum-line"><span class="lbl">Base Cost (तुमचा खर्च)</span><span class="val" id="sumBase">₹0</span></div>
+    <div class="sum-line" id="urgentLine" style="display:none"><span class="lbl" style="color:var(--red)">Urgent Charge (15%)</span><span class="val" style="color:var(--red)" id="sumUrgent">₹0</span></div>
+    <div class="sum-line"><span class="lbl">तुमचा Profit (<span id="sumMarginPct">50</span>%)</span><span class="val" style="color:var(--green)" id="sumProfit">₹0</span></div>
+
+    <div class="sum-divider"></div>
+
+    <div class="sum-total-box">
+      <div class="sum-total-label">CLIENT ला सांगायची किंमत</div>
+      <div class="sum-total-amount" id="sumTotal">₹0</div>
+      <!-- <div class="sum-total-gst" id="sumGstNote">GST वेगळा असल्यास + 18% (₹0)</div>-->
+    </div>
+
+    <div class="sum-savings" id="sumSavings">
+      <div class="s-icon">💰</div>
+      <div class="s-text">आपण <strong id="savingAmt">₹0</strong> ची बचत केली आहे</div>
+    </div>
+
+    <div class="profit-wrap">
+      <div class="profit-label">
+        <span>तुमचा Profit</span>
+        <span id="profitPctLabel">50%</span>
+      </div>
+      <div class="profit-bar"><div class="profit-fill" id="profitFill" style="width:50%"></div></div>
+    </div>
+
+    <button class="cta-btn" onclick="generateQuote()">पूर्ण प्लान पहा →</button>
+
+    <div class="yearly-box">
+      <strong>वार्षिक Renewal:</strong> Domain ₹800–1,200 + Hosting ₹1,500–3,000<br>
+      ≈ <strong>₹2,500–4,200 / year</strong> — client ला आधीच सांगा!
+    </div>
+
+  </div>
+</div>
+
+</div><!-- end layout -->
+
+<script>
+const PKG = [
+  {id:'basic',    label:'Starter',  desc:'Simple info site, 5 pages',    icon:'🌱', badge:'basic',    badgeText:'Basic',    startPrice:'₹3,600',  mktBase:25000},
+  {id:'standard', label:'Standard', desc:'Business site, most clients',   icon:'⭐', badge:'standard', badgeText:'Popular',  startPrice:'₹15,000', mktBase:55000},
+  {id:'ecommerce',label:'E-commerce',desc:'Cart + Payment + Orders',      icon:'🛒', badge:'ecomm',    badgeText:'Pro',      startPrice:'₹40,000', mktBase:120000},
+  {id:'premium',  label:'Advanced', desc:'Full-featured + Admin panel',   icon:'🚀', badge:'premium',  badgeText:'Premium',  startPrice:'₹80,000', mktBase:200000},
+];
+
+const FEATURES = [
+  {id:'home',      label:'Home + About + Contact',    base:500,  cat:'📄 Pages',   tier:'',    pkg:['basic','standard','ecommerce','premium']},
+  {id:'services',  label:'Services / Products List',   base:500,  cat:'📄 Pages',   tier:'',    pkg:['standard','ecommerce','premium']},
+  {id:'gallery',   label:'Photo Gallery',               base:500,  cat:'📄 Pages',   tier:'',    pkg:['standard','ecommerce','premium']},
+  {id:'blog',      label:'Blog / News Section',         base:1200, cat:'📄 Pages',   tier:'pro', pkg:['premium']},
+  {id:'faq',       label:'FAQ Page',                    base:400,  cat:'📄 Pages',   tier:'',    pkg:['standard','ecommerce','premium']},
+  {id:'portfolio', label:'Portfolio / Case Studies',    base:800,  cat:'📄 Pages',   tier:'',    pkg:['standard','premium']},
+  {id:'team',      label:'Team / Staff Page',           base:500,  cat:'📄 Pages',   tier:'',    pkg:['standard','premium']},
+  {id:'404',       label:'Custom 404 Error Page',       base:300,  cat:'📄 Pages',   tier:'',    pkg:['standard','ecommerce','premium']},
+
+  {id:'mobile',    label:'Mobile Responsive Design',    base:500,  cat:'🎨 UI/Design',tier:'',   pkg:['basic','standard','ecommerce','premium']},
+  {id:'slider',    label:'Hero Image Slider / Banner',  base:800,  cat:'🎨 UI/Design',tier:'',   pkg:['standard','ecommerce','premium']},
+  {id:'darkmode',  label:'Dark Mode Toggle',             base:800, cat:'🎨 UI/Design',tier:'pro',pkg:['premium']},
+  {id:'animation', label:'Scroll Animations / Effects', base:500, cat:'🎨 UI/Design',tier:'pro',pkg:['ecommerce','premium']},
+  {id:'loader',    label:'Custom Loader / Preloader',    base:400,  cat:'🎨 UI/Design',tier:'',   pkg:['standard','ecommerce','premium']},
+  {id:'sticky',    label:'Sticky Header / Navbar',       base:400,  cat:'🎨 UI/Design',tier:'',   pkg:['standard','ecommerce','premium']},
+  {id:'popup',     label:'Popup / Offer Modal',          base:600,  cat:'🎨 UI/Design',tier:'',   pkg:['standard','ecommerce','premium']},
+  {id:'countdown', label:'Countdown Timer / Offer',      base:500,  cat:'🎨 UI/Design',tier:'',   pkg:['ecommerce','premium']},
+
+  {id:'cart',      label:'Cart System (Add / Remove)',   base:3000, cat:'🛒 E-commerce',tier:'pro',pkg:['ecommerce','premium']},
+  {id:'menu',      label:'Full Menu System (Cat+Items)', base:2500, cat:'🛒 E-commerce',tier:'pro',pkg:['ecommerce','premium']},
+  {id:'checkout',  label:'Checkout Flow',                base:2000, cat:'🛒 E-commerce',tier:'pro',pkg:['ecommerce','premium']},
+  {id:'wishlist',  label:'Wishlist / Favourites',        base:1200, cat:'🛒 E-commerce',tier:'pro',pkg:['ecommerce','premium']},
+  {id:'coupon',    label:'Coupon / Discount Codes',      base:1500, cat:'🛒 E-commerce',tier:'pro',pkg:['ecommerce','premium']},
+  {id:'productpg', label:'Product Detail Page',          base:1200, cat:'🛒 E-commerce',tier:'pro',pkg:['ecommerce','premium']},
+  {id:'stock',     label:'Stock / Inventory Tracking',   base:2500, cat:'🛒 E-commerce',tier:'ent',pkg:['premium']},
+  {id:'reviews',   label:'Reviews & Ratings',            base:2000, cat:'🛒 E-commerce',tier:'pro',pkg:['ecommerce','premium']},
+  {id:'compare',   label:'Product Compare Feature',      base:1500, cat:'🛒 E-commerce',tier:'ent',pkg:['premium']},
+  {id:'recently',  label:'Recently Viewed Items',        base:800,  cat:'🛒 E-commerce',tier:'pro',pkg:['ecommerce','premium']},
+
+  {id:'razorpay',  label:'Razorpay Payment Gateway',     base:3000, cat:'💳 Payment',  tier:'pro',pkg:['ecommerce','premium']},
+  {id:'upi',       label:'UPI / QR Code Payment',        base:2000, cat:'💳 Payment',  tier:'pro',pkg:['ecommerce','premium']},
+  {id:'cod',       label:'Cash on Delivery Option',      base:800,  cat:'💳 Payment',  tier:'',   pkg:['ecommerce','premium']},
+  {id:'invoice',   label:'Auto Invoice PDF',              base:1000, cat:'💳 Payment',  tier:'ent',pkg:['premium']},
+  {id:'gstauto',   label:'GST Auto-Calculation',         base:300,  cat:'💳 Payment',  tier:'',   pkg:['ecommerce','premium']},
+  {id:'wallet',    label:'Wallet / Store Credit',        base:2500, cat:'💳 Payment',  tier:'ent',pkg:['premium']},
+
+  {id:'admindash', label:'Admin Dashboard',               base:5000, cat:'⚙️ Admin',   tier:'ent',pkg:['premium']},
+  {id:'adminmenu', label:'Menu / Product Management',     base:2500, cat:'⚙️ Admin',   tier:'pro',pkg:['ecommerce','premium']},
+  {id:'ordertrack',label:'Order Tracking Panel',          base:3000, cat:'⚙️ Admin',   tier:'pro',pkg:['ecommerce','premium']},
+  {id:'reports',   label:'Sales Reports & Analytics',     base:3500, cat:'⚙️ Admin',   tier:'ent',pkg:['premium']},
+  {id:'usermgmt',  label:'User Management',               base:1500, cat:'⚙️ Admin',   tier:'pro',pkg:['ecommerce','premium']},
+  {id:'cms',       label:'Content Management (CMS)',      base:3000, cat:'⚙️ Admin',   tier:'pro',pkg:['standard','ecommerce','premium']},
+
+  {id:'wa',        label:'WhatsApp / Call Button',        base:300,  cat:'🔗 Integrations',tier:'',pkg:['basic','standard','ecommerce','premium']},
+  {id:'wanotif',   label:'WhatsApp Order Notification<br><span style="font-size:12px;font-style:italic;">per msg charges apply, new mobile no. required.</span>',   base:1500, cat:'🔗 Integrations',tier:'pro',pkg:['ecommerce','premium']},
+  {id:'sms',       label:'SMS OTP + Order Alerts<br><span style="font-size:12px;font-style:italic;">per msg charges apply, DLT required.</span>',        base:1200, cat:'🔗 Integrations',tier:'pro',pkg:['ecommerce','premium']},
+  {id:'email',     label:'Email Notifications<br><sspan style="font-size:12px;font-style:italic;">per email charges apply</span>',           base:800,  cat:'🔗 Integrations',tier:'',pkg:['standard','ecommerce','premium']},
+  {id:'map',       label:'Google Maps Embed',             base:300,  cat:'🔗 Integrations',tier:'',pkg:['basic','standard','ecommerce','premium']},
+  {id:'analytics', label:'Google Analytics Setup',        base:500,  cat:'🔗 Integrations',tier:'',pkg:['standard','ecommerce','premium']},
+  {id:'pixel',     label:'Facebook / Meta Pixel',         base:500,  cat:'🔗 Integrations',tier:'',pkg:['standard','ecommerce','premium']},
+  {id:'livechat',  label:'Live Chat (Tawk.to)',           base:500,  cat:'🔗 Integrations',tier:'',pkg:['standard','ecommerce','premium']},
+  {id:'booking',   label:'Booking / Appointment Form',    base:1500, cat:'🔗 Integrations',tier:'pro',pkg:['standard','premium']},
+
+  {id:'seo',       label:'Basic SEO Setup',               base:800,  cat:'🔍 SEO',     tier:'',   pkg:['standard','ecommerce','premium']},
+  {id:'seoadv',    label:'Advanced SEO + Schema',         base:2500, cat:'🔍 SEO',     tier:'pro',pkg:['premium']},
+  {id:'speed',     label:'Speed Optimization',            base:1500, cat:'🔍 SEO',     tier:'',   pkg:['ecommerce','premium']},
+  {id:'sitemap',   label:'Sitemap + robots.txt',          base:400,  cat:'🔍 SEO',     tier:'',   pkg:['standard','ecommerce','premium']},
+  {id:'og',        label:'Social Share Preview (OG)',     base:400,  cat:'🔍 SEO',     tier:'',   pkg:['standard','ecommerce','premium']},
+
+  {id:'ssl',       label:'SSL Certificate Setup',         base:200, cat:'🖥️ Infra',  tier:'',   pkg:['basic','standard','ecommerce','premium']},
+  {id:'hosting',   label:'Domain + Hosting (1 Year)',     base:1800, cat:'🖥️ Infra',  tier:'',   pkg:['basic','standard','ecommerce','premium']},
+  {id:'backup',    label:'Website Backup System',         base:800,  cat:'🖥️ Infra',  tier:'',   pkg:['ecommerce','premium']},
+  {id:'amc',       label:'AMC Annual Maintenance',        base:2000, cat:'🖥️ Infra',  tier:'',   pkg:['standard','ecommerce','premium']},
+  {id:'multilang', label:'Multi-language Support',        base:2500, cat:'🖥️ Infra',  tier:'pro',pkg:['premium']},
+];
+
+const PKG_DEFAULTS = {
+  basic:     ['home','wa','mobile','ssl','hosting','map'],
+  standard:  ['home','wa','services','gallery','map','seo','mobile','ssl','hosting','sitemap','og','faq','sticky','loader','cms','email','analytics','amc'],
+  ecommerce: ['home','wa','services','gallery','map','seo','mobile','ssl','hosting','sitemap','og','faq','slider','cart','menu','checkout','wishlist','coupon','productpg','razorpay','upi','cod','gstauto','adminmenu','ordertrack','usermgmt','wanotif','sms','email','analytics','speed','backup','security','reviews','animation','sticky','popup','countdown','recently','amc'],
+  premium:   FEATURES.map(f=>f.id),
+};
+
+const CATS = [...new Set(FEATURES.map(f=>f.cat))];
+let selPkg = 'basic';
+let selFeats = new Set(PKG_DEFAULTS.basic);
+let activeCat = CATS[0];
+
+function fmt(n){return'₹'+Math.round(n).toLocaleString('en-IN')}
+
+// Render packages
+function renderPkgs(){
+  document.getElementById('pkgGrid').innerHTML = PKG.map(p=>`
+    <div class="pkg-card${selPkg===p.id?' active':''}" onclick="setPkg('${p.id}')">
+      <div class="tick">${selPkg===p.id?'✓':''}</div>
+      <span class="pkg-badge badge-${p.badge}">${p.badgeText}</span>
+      <div class="pkg-name">${p.icon} ${p.label}</div>
+      <div class="pkg-desc">${p.desc}</div>
+      <div class="pkg-price">Starting ${p.startPrice}</div>
+    </div>
+  `).join('');
+}
+
+function setPkg(id){
+  selPkg=id;
+  selFeats=new Set(PKG_DEFAULTS[id]);
+  renderPkgs();
+  renderCats();
+  renderFeats();
+  calc();
+}
+
+// Render category tabs
+function renderCats(){
+  document.getElementById('catTabs').innerHTML = CATS.map(c=>`
+    <button class="cat-tab${c===activeCat?' active':''}" onclick="setCat('${c.replace(/'/g,"\\'")}')">
+      ${c}
+    </button>
+  `).join('');
+}
+
+function setCat(cat){
+  activeCat=cat;
+  renderCats();
+  renderFeats();
+  updateSelAllBtn();
+}
+
+function updateSelAllBtn(){
+  const vis=FEATURES.filter(f=>f.cat===activeCat);
+  const allOn=vis.every(f=>selFeats.has(f.id));
+  document.getElementById('selAllBtn').textContent = allOn ? 'सर्व काढा' : 'सर्व निवडा';
+}
+
+function toggleAllVisible(){
+  const vis=FEATURES.filter(f=>f.cat===activeCat);
+  const allOn=vis.every(f=>selFeats.has(f.id));
+  vis.forEach(f=> allOn ? selFeats.delete(f.id) : selFeats.add(f.id));
+  renderFeats();
+  calc();
+  updateSelAllBtn();
+}
+
+// Render features
+function renderFeats(){
+  const visible=FEATURES.filter(f=>f.cat===activeCat);
+  document.getElementById('featGrid').innerHTML = visible.map(f=>{
+    const on=selFeats.has(f.id);
+    const tier=f.tier?`<span class="tier-tag tier-${f.tier}">${f.tier==='pro'?'Pro':'Enterprise'}</span>`:'';
+    return`<button class="feat-btn${on?' active':''}" onclick="toggleFeat('${f.id}')">
+      <div class="feat-icon">${on?'✓':''}</div>
+      <span class="feat-label">${f.label}${tier}</span>
+      <span class="feat-cost">+${fmt(f.base)}</span>
+    </button>`;
+  }).join('');
+  document.getElementById('catCountLabel').innerHTML = `<strong>${selFeats.size}</strong> features निवडले`;
+  updateSelAllBtn();
+}
+
+function toggleFeat(id){
+  selFeats.has(id)?selFeats.delete(id):selFeats.add(id);
+  renderFeats();
+  calc();
+}
+
+// Calc
+function calc(){
+  const margin=0;
+  const days=parseInt(document.getElementById('deliveryRange').value);
+  //document.getElementById('marginVal').textContent=margin+'%';
+  document.getElementById('deliveryVal').textContent=days+' दिवस';
+
+  const urgent = days<=2;
+  document.getElementById('urgentWarn').className='urgent-warn'+(urgent?' show':'');
+  document.getElementById('urgentLine').style.display=urgent?'flex':'none';
+
+  let base=0;
+  FEATURES.forEach(f=>{ if(selFeats.has(f.id)) base+=f.base; });
+
+  const urgentAmt = urgent ? Math.round(base*0.15) : 0;
+  const totalCost = base + urgentAmt;
+  const selling = Math.round(totalCost / (1-margin/100) / 100)*100;
+  const profit = selling - totalCost;
+  const gst = Math.round(selling*0.18);
+
+  const pkgInfo = PKG.find(p=>p.id===selPkg);
+  const mktRate = pkgInfo ? pkgInfo.mktBase : 60000;
+  const saving = Math.max(0, mktRate - selling);
+
+  // Summary panel
+  const icons={basic:'🌱',standard:'⭐',ecommerce:'🛒',premium:'🚀'};
+  const names={basic:'Starter Package',standard:'Standard Package',ecommerce:'E-commerce Package',premium:'Advanced Package'};
+  document.getElementById('sumPkgIcon').textContent=icons[selPkg]||'📦';
+  document.getElementById('sumPkgName').textContent=names[selPkg]||'—';
+  document.getElementById('sumPkgCount').textContent=selFeats.size+' features selected';
+  const dl=document.getElementById('featDropLabel');
+  if(dl)dl.textContent=selFeats.size>0?'निवडलेले '+selFeats.size+' Features पाहा':'निवडलेले Features पाहा';
+  if(document.getElementById('featDropList').classList.contains('open'))renderFeatDropdown();
+
+  document.getElementById('sumBase').textContent=fmt(totalCost);
+  document.getElementById('sumUrgent').textContent=fmt(urgentAmt);
+  document.getElementById('sumProfit').textContent=fmt(profit);
+  document.getElementById('sumMarginPct').textContent=margin;
+  document.getElementById('sumTotal').textContent=fmt(selling);
+  //document.getElementById('sumGstNote').textContent='GST लागल्यास + 18% = '+fmt(selling+gst);
+  document.getElementById('savingAmt').textContent=fmt(saving)+' बचत';
+  document.getElementById('profitPctLabel').textContent=margin+'%';
+  document.getElementById('profitFill').style.width=margin+'%';
+}
+
+function toggleFeatDropdown(){
+  const toggle=document.getElementById('featDropToggle');
+  const list=document.getElementById('featDropList');
+  const isOpen=list.classList.contains('open');
+  toggle.classList.toggle('open',!isOpen);
+  list.classList.toggle('open',!isOpen);
+  if(!isOpen){renderFeatDropdown();document.getElementById('featDropSearch').value='';}
+}
+
+function renderFeatDropdown(){
+  const q=(document.getElementById('featDropSearch').value||'').toLowerCase();
+  const inner=document.getElementById('featDropInner');
+  const selected=FEATURES.filter(f=>selFeats.has(f.id));
+  const filtered=q?selected.filter(f=>f.label.toLowerCase().includes(q)):selected;
+
+  document.getElementById('featDropLabel').textContent=
+    selFeats.size>0?'निवडलेले '+selFeats.size+' Features पाहा':'निवडलेले Features पाहा';
+
+  if(filtered.length===0){
+    inner.innerHTML=`<div class="feat-drop-empty">${q?'कोणताही result नाही':'अजून कोणतेही features निवडले नाहीत'}</div>`;
+    return;
+  }
+  const byCat={};
+  filtered.forEach(f=>{
+    if(!byCat[f.cat])byCat[f.cat]=[];
+    byCat[f.cat].push(f);
+  });
+  inner.innerHTML=Object.entries(byCat).map(([cat,feats])=>
+    `<div class="feat-drop-cat">${cat}</div>`+
+    feats.map(f=>`
+      <div class="feat-drop-item">
+        <div class="fi-left">
+          <div class="fi-dot"></div>
+          <span class="fi-name">${f.label}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span class="fi-price">+&#8377;${f.base.toLocaleString('en-IN')}</span>
+          <div class="fi-remove" onclick="removeFeatFromDrop('${f.id}')" title="काढा">&#10005;</div>
+        </div>
+      </div>`).join('')
+  ).join('');
+}
+
+function removeFeatFromDrop(id){
+  selFeats.delete(id);
+  renderFeats();
+  renderFeatDropdown();
+  calc();
+}
+
+function generateQuote(){
+  const margin=0;
+  const days=parseInt(document.getElementById('deliveryRange').value);
+  let base=0;
+  FEATURES.forEach(f=>{ if(selFeats.has(f.id)) base+=f.base; });
+  const urgent=days<=2?Math.round(base*0.15):0;
+  const cost=base+urgent;
+  const selling=Math.round(cost/(1-margin/100)/100)*100;
+  const names={basic:'Starter',standard:'Standard Business',ecommerce:'E-commerce',premium:'Advanced / Premium'};
+  const selected=FEATURES.filter(f=>selFeats.has(f.id)).map(f=>f.label);
+  const msg=`नमस्कार! 🙏\n\nआपल्या website साठी pricing:\n\n📦 Package: ${names[selPkg]}\n🔧 Features (${selected.length}): ${selected.slice(0,6).join(', ')}${selected.length>6?'... इतर':''}.\n💰 एकूण किंमत: ₹${selling.toLocaleString('en-IN')}\n⏱️ Delivery: ${days} दिवस\n\n+ Domain & Hosting: ~₹1,500–4,000/year (वार्षिक)\n\nअधिक माहितीसाठी संपर्क करा.`;
+  alert(msg);
+}
+
+// Init
+renderPkgs();
+renderCats();
+renderFeats();
+calc();
+</script>
+</body>
+</html>
