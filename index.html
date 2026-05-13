@@ -14,9 +14,9 @@
   --surface:#ffffff;
   --bg:#f4f3f8;
   --bg2:#eceaf4;
-  --accent:#5c4de8;
-  --accent-light:#ede9ff;
-  --accent-mid:#7c6ff0;
+  --accent:#1E3A8A;
+  --accent-light:#B0BEE6;
+  --accent-mid:#1E3A8A;
   --green:#16a34a;
   --green-light:#dcfce7;
   --green-border:#bbf7d0;
@@ -183,6 +183,208 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
   .header{padding:16px 20px}
   .layout{padding:12px}
 }
+
+
+/* BACKDROP */
+.plan-modal{
+  position:fixed;
+  inset:0;
+  background:rgba(15,10,40,0.65);
+  backdrop-filter:blur(8px);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+  padding:16px;
+}
+
+.plan-modal.show{
+  display:flex;
+}
+
+/* CARD */
+.plan-modal-content{
+  width:100%;
+  max-width:680px;
+  background:#fff;
+  border-radius:18px;
+  overflow:hidden;
+  animation:pop .35s ease;
+  box-shadow:0 20px 60px rgba(0,0,0,0.25);
+  display:flex;
+  flex-direction:column;
+}
+
+@keyframes pop{
+  from{transform:scale(.9);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+
+/* HEADER */
+.plan-modal-header{
+  background:linear-gradient(135deg,#5c4de8,#7c6ff0);
+  color:#fff;
+  padding:20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.plan-modal-header h2{
+  font-size:18px;
+  margin-bottom:3px;
+}
+
+.plan-modal-header p{
+  font-size:12px;
+  opacity:.8;
+}
+
+.close-btn{
+  font-size:24px;
+  cursor:pointer;
+}
+
+/* BODY */
+.plan-modal-body{
+  padding:20px;
+  overflow-y:auto;
+  max-height:65vh;
+}
+
+/* PRICE CARD */
+.modal-price-card{
+  background:linear-gradient(135deg,#f3f2ff,#ede9ff);
+  border-radius:14px;
+  padding:18px;
+  text-align:center;
+  margin-bottom:16px;
+}
+
+.price-big{
+  font-size:34px;
+  font-weight:800;
+  color:#5c4de8;
+}
+
+.price-sub{
+  font-size:12px;
+  color:#666;
+}
+
+/* STATS */
+.modal-stats{
+  display:flex;
+  gap:10px;
+  margin-bottom:16px;
+}
+
+.stat{
+  flex:1;
+  background:#f7f7fb;
+  border-radius:10px;
+  padding:10px;
+  text-align:center;
+}
+
+.stat span{
+  font-size:11px;
+  color:#777;
+}
+
+.stat strong{
+  display:block;
+  font-size:16px;
+  margin-top:2px;
+}
+
+/* FEATURES */
+.feature-tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+
+.feature-tags span{
+  background:#ede9ff;
+  color:#5c4de8;
+  padding:6px 10px;
+  border-radius:50px;
+  font-size:11px;
+  font-weight:600;
+}
+
+/* PRICE BOX */
+.price-box{
+  background:#f8f8fc;
+  border-radius:10px;
+  padding:12px;
+}
+
+.price-box .row{
+  display:flex;
+  justify-content:space-between;
+  padding:6px 0;
+  font-size:13px;
+}
+
+.price-box .urgent{
+  color:#dc2626;
+}
+
+.price-box .total{
+  border-top:1px dashed #ddd;
+  margin-top:6px;
+  padding-top:8px;
+  font-weight:700;
+}
+
+/* FOOTER */
+.modal-footer{
+  display:flex;
+  gap:10px;
+  padding:16px;
+  border-top:1px solid #eee;
+}
+
+.btn-outline{
+  flex:1;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #ddd;
+  background:#fff;
+  cursor:pointer;
+}
+
+.btn-main{
+  flex:2;
+  padding:12px;
+  border-radius:10px;
+  border:none;
+  background:#5c4de8;
+  color:#fff;
+  font-weight:700;
+  cursor:pointer;
+}
+
+/* MOBILE */
+@media(max-width:600px){
+  .plan-modal-content{
+    border-radius:14px;
+  }
+
+  .price-big{
+    font-size:26px;
+  }
+
+  .modal-footer{
+    flex-direction:column;
+  }
+
+  .btn-main,.btn-outline{
+    width:100%;
+  }
+}
 </style>
 </head>
 <body>
@@ -192,7 +394,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
     <span class="title">Website Pricing Calculator</span>
     <span class="sub">तुमची requirements निवडा</span>
   </div>
-  <span class="header-tag">2025 Rates</span>
+  <span class="header-tag">2026 Rates</span>
 </div>
 
 <div class="layout">
@@ -305,7 +507,7 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
     </div>
 
 
-    <button class="cta-btn" onclick="generateQuote()">पूर्ण प्लान पहा →</button>
+    <button class="cta-btn" onclick="generateQuote()">पूर्ण प्लान पहा </button>
 
     <div class="yearly-box">
       <strong>वार्षिक Renewal:</strong> Domain ₹800–1,200 + Hosting ₹1,500–3,000
@@ -315,6 +517,78 @@ input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
 </div>
 
 </div><!-- end layout -->
+
+
+
+
+<!-- PLAN MODAL -->
+<div class="plan-modal" id="planModal">
+  <div class="plan-modal-content">
+
+    <!-- HEADER -->
+    <div class="plan-modal-header">
+      <div>
+        <h2 id="modalPkgTitle">📦 Starter Plan</h2>
+        <p id="modalSub">Perfect for small business</p>
+      </div>
+      <span class="close-btn" onclick="closeModal()">×</span>
+    </div>
+
+    <!-- BODY -->
+    <div class="plan-modal-body">
+
+      <!-- PRICE CARD -->
+      <div class="modal-price-card">
+        <div class="price-big" id="modalTotal">₹0</div>
+        <div class="price-sub">Total Project Cost</div>
+      </div>
+
+      <!-- STATS -->
+      <div class="modal-stats">
+        <div class="stat">
+          <span>Features</span>
+          <strong id="modalFeatCount">0</strong>
+        </div>
+        <div class="stat">
+          <span>Delivery</span>
+          <strong id="modalDays">0 Days</strong>
+        </div>
+      </div>
+
+      <!-- FEATURES -->
+      <div class="modal-section">
+        <h3 style="margin-bottom:7px;">🔧 Included Features</h3>
+        <div class="feature-tags" id="modalFeatures"></div>
+      </div>
+
+      <!-- PRICE BREAKDOWN -->
+      <div class="modal-section">
+        <h3 style="margin-top:20px;margin-bottom:7px;">💰 Cost Breakdown</h3>
+        <div class="price-box">
+          <div class="row">
+            <span>Base Cost</span>
+            <span id="modalBase">₹0</span>
+          </div>
+          <div class="row urgent" id="modalUrgentRow">
+            <span>⚡ Urgent Charge</span>
+            <span id="modalUrgent">₹0</span>
+          </div>
+          <div class="row total">
+            <span>Total</span>
+            <span id="modalFinal">₹0</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- FOOTER CTA -->
+    <div class="modal-footer">
+      <button class="btn-outline" onclick="closeModal()">Edit Plan</button>
+    </div>
+
+  </div>
+</div>
 
 <script>
 const PKG = [
@@ -371,7 +645,7 @@ const FEATURES = [
   {id:'wa',        label:'WhatsApp / Call Button',        base:300,  cat:'🔗 Integrations',tier:'',pkg:['basic','standard','ecommerce','premium']},
   {id:'wanotif',   label:'WhatsApp Order Notification<br><span style="font-size:12px;font-style:italic;">per msg charges apply, new mobile no. required.</span>',   base:1500, cat:'🔗 Integrations',tier:'pro',pkg:['ecommerce','premium']},
   {id:'sms',       label:'SMS OTP + Order Alerts<br><span style="font-size:12px;font-style:italic;">per msg charges apply, DLT required.</span>',        base:1200, cat:'🔗 Integrations',tier:'pro',pkg:['ecommerce','premium']},
-  {id:'email',     label:'Email Notifications<br><sspan style="font-size:12px;font-style:italic;">per email charges apply</span>',           base:800,  cat:'🔗 Integrations',tier:'',pkg:['standard','ecommerce','premium']},
+  {id:'email',     label:'Email Notifications<br><span style="font-size:12px;font-style:italic;">per email charges apply</span>',           base:800,  cat:'🔗 Integrations',tier:'',pkg:['standard','ecommerce','premium']},
   {id:'map',       label:'Google Maps Embed',             base:300,  cat:'🔗 Integrations',tier:'',pkg:['basic','standard','ecommerce','premium']},
   {id:'analytics', label:'Google Analytics Setup',        base:500,  cat:'🔗 Integrations',tier:'',pkg:['standard','ecommerce','premium']},
   {id:'pixel',     label:'Facebook / Meta Pixel',         base:500,  cat:'🔗 Integrations',tier:'',pkg:['standard','ecommerce','premium']},
@@ -571,18 +845,63 @@ function removeFeatFromDrop(id){
   calc();
 }
 
+function removeHTMLTags(text) {
+  return text.replace(/<[^>]*>/g, '');
+}
+
+
 function generateQuote(){
-  const margin=0;
-  const days=parseInt(document.getElementById('deliveryRange').value);
-  let base=0;
-  FEATURES.forEach(f=>{ if(selFeats.has(f.id)) base+=f.base; });
-  const urgent=days<=2?Math.round(base*0.15):0;
-  const cost=base+urgent;
-  const selling=Math.round(cost/(1-margin/100)/100)*100;
-  const names={basic:'Starter',standard:'Standard Business',ecommerce:'E-commerce',premium:'Advanced / Premium'};
-  const selected=FEATURES.filter(f=>selFeats.has(f.id)).map(f=>f.label);
-  const msg=`नमस्कार! 🙏\n\nआपल्या website साठी pricing:\n\n📦 Package: ${names[selPkg]}\n🔧 Features (${selected.length}): ${selected.slice(0,6).join(', ')}${selected.length>6?'... इतर':''}.\n💰 एकूण किंमत: ₹${selling.toLocaleString('en-IN')}\n⏱️ Delivery: ${days} दिवस\n\n+ Domain & Hosting: ~₹1,500–4,000/year (वार्षिक)\n\nअधिक माहितीसाठी संपर्क करा.`;
-  alert(msg);
+  const days = parseInt(document.getElementById('deliveryRange').value);
+
+  let base = 0;
+  FEATURES.forEach(f=>{
+    if(selFeats.has(f.id)) base += f.base;
+  });
+
+  const urgent = days<=2 ? Math.round(base*0.15) : 0;
+  const total = base + urgent;
+
+  const names={
+    basic:'Starter',
+    standard:'Standard',
+    ecommerce:'E-commerce',
+    premium:'Advanced'
+  };
+
+  // HEADER
+  document.getElementById('modalPkgTitle').innerText = names[selPkg] + " Plan";
+  document.getElementById('modalSub').innerText = selFeats.size + " Features Included";
+
+  // PRICE
+  document.getElementById('modalTotal').innerText = "₹"+total.toLocaleString('en-IN');
+
+  // STATS
+  document.getElementById('modalFeatCount').innerText = selFeats.size;
+  document.getElementById('modalDays').innerText = days + " Days";
+
+  // FEATURES TAGS
+  const selected = FEATURES.filter(f=>selFeats.has(f.id));
+  document.getElementById('modalFeatures').innerHTML =
+    selected.map(f=>`<span>${f.label.replace(/<br>\s*<span[^>]*>.*?<\/span>/i, '')}</span>`).join('');
+
+  // BREAKDOWN
+  document.getElementById('modalBase').innerText = "₹"+base.toLocaleString('en-IN');
+  document.getElementById('modalUrgent').innerText = "₹"+urgent.toLocaleString('en-IN');
+  document.getElementById('modalFinal').innerText = "₹"+total.toLocaleString('en-IN');
+
+  document.getElementById('modalUrgentRow').style.display = urgent>0 ? 'flex':'none';
+
+  document.getElementById('planModal').classList.add('show');
+}
+function closeModal(){
+  document.getElementById('planModal').classList.remove('show');
+}
+
+window.onclick = function(e){
+  const modal = document.getElementById('planModal');
+  if(e.target === modal){
+    modal.classList.remove('show');
+  }
 }
 
 // Init
